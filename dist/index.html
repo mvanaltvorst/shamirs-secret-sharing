@@ -1,0 +1,22 @@
+<html>
+<head>
+  <title>Shamir's Secret Sharing</title>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <script src="./bundle.js"></script>
+</head>
+<body>
+  <h1>Shamir's Secret Sharing</h1>
+  <h3>A demo of the most well-known secret sharing algorithm</h3>
+  <br>
+  <h1>Enter your secret</h1>
+  <br><label for="secret">Secret:</label><input type="text" id="secret"></input>
+  <br><label for="secret">Amount of fragments:</label><input type="text" id="n"></input>
+  <br><label for="secret">Threshold number of fragments:</label><input type="text" id="k"></input>
+  <br><br><button id="splitSecret" onclick="App.splitSecret();">Split secret</button>
+  <br><br>
+  <span id="splitSecretStatus"></span>
+  <br>
+  <ul id="output">
+  </ul>
+  <span class="info">Click <strong>here</strong> to learn more about Shamir's Secret Sharing algorithm.</span>
+</html>
