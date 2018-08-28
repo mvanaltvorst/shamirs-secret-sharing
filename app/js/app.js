@@ -1,7 +1,7 @@
 import "../css/app.css"
+import AxvecoLogo from "../assets/axveco.jpg"
 
 const bigInt = require("big-integer");
-
 //NOTE: p should be a prime bigger than 2^256 (Ethereum private key max size)
 const PRIME = bigInt(2).pow(257).minus(1);
 // const p = 11;
@@ -180,3 +180,8 @@ const App = {
 };
 
 window.App = App;
+var axvecoImage = new Image();
+axvecoImage.src = AxvecoLogo;
+window.onload = () => {
+  document.getElementById("imgContainer").appendChild(axvecoImage);
+}

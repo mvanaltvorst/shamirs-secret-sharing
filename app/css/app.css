@@ -26,6 +26,7 @@ h1, h2 {
   vertical-align: middle;
   margin-top: 0px;
   margin-bottom: 10px;
+  /* color: rgb(55, 31, 18) */
 }
 
 h2 {
@@ -62,4 +63,14 @@ li {
 
 li:last-child {
   border-bottom: none;
+}
+
+#imgContainer {
+  display: inline-block;
+  margin-left: 75px;
+  height: 80px;
+}
+#imgContainer img {
+  height: 100%;
+  vertical-align: middle;
 }

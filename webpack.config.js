@@ -25,6 +25,12 @@ module.exports = {
           presets: ["env"],
           plugins: ["transform-react-jsx", "transform-runtime"]
         }
+      },
+      {
+        test: /\.(png|jpg|gif)$/,
+        use: [
+          "file-loader"
+        ]
       }
     ]
   }
