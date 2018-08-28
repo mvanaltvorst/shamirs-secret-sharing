@@ -7,6 +7,7 @@ const p = bigInt(2).pow(127).minus(1);
 
 const App = {
   fragments: [],
+  stringFragments: new Set(), // Used to check whether a fragment was already added
   splitSecret: function() {
     try {
       var secret = bigInt(document.getElementById("secret").value);
@@ -76,17 +77,41 @@ const App = {
   },
 
   addFragment: function() {
-    var elem = document.getElementById("fragment");
-
-    //TODO: add proper fragment parsing
-    var value = parseInt(elem.value)
-    if (isNaN(value)) {
-      alert("Please enter an integer as fragment.");
+    try {
+      var elem = document.getElementById("fragment");
+      var parsingString = elem.value.trim().slice(1, -1);
+      var vals = parsingString.split(", ");
+      if (vals[0] === "" || vals[1] === "") {
+        throw "Empty number";
+      }
+      var x = bigInt(vals[0]);
+      var y = bigInt(vals[1]);
+    } catch (_) {
+      alert("Unable to parse fragment. Did you enter it correctly?");
       return;
     }
-    //TODO: add to the HTML list
-    this.fragments.push(value);
+    if (this.stringFragments.has(elem.value)) {
+      alert("You've already added this fragment.");
+      return;
+    }
+    this.stringFragments.add(elem.value);
+    this.fragments.push({x, y});
+    // Add to HTML list
+    const ul = document.getElementById("fragments");
+    var li = document.createElement("li");
+    li.appendChild(document.createTextNode(elem.value));
+    ul.appendChild(li);
     elem.value = "";
+
+  },
+
+  clearFragments: function() {
+    const ul = document.getElementById("fragments");
+    while (ul.firstChild) {
+      ul.removeChild(ul.firstChild);
+    }
+    this.fragments = [];
+    this.stringFragments = new Set();
   },
 
   calculateSecret: function() {

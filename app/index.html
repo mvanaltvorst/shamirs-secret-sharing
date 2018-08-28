@@ -5,26 +5,34 @@
   <script src="./bundle.js"></script>
 </head>
 <body>
+  <!-- TODO: fix UI with multiple pages -->
   <h1>Shamir's Secret Sharing</h1>
   <h3>A demo of the most well-known secret sharing algorithm</h3>
   <br>
-  <h1>Enter your secret</h1>
-  <br><label for="secret">Secret:</label><input type="text" id="secret"></input>
-  <br><label for="secret">Amount of fragments:</label><input type="text" id="n"></input>
-  <br><label for="secret">Threshold number of fragments:</label><input type="text" id="k"></input>
-  <br><br><button id="splitSecret" onclick="App.splitSecret();">Split secret</button>
+  <div id="genSecret">
+    <h1>Enter your secret</h1>
+    <br><label for="secret">Secret:</label><input type="text" id="secret"></input>
+    <br><label for="secret">Amount of fragments:</label><input type="text" id="n"></input>
+    <br><label for="secret">Threshold number of fragments:</label><input type="text" id="k"></input>
+    <br><br><button id="splitSecret" onclick="App.splitSecret();">Split secret</button>
+    <br>
+    <h3>Secrets</h3>
+    <ul id="output">
+    </ul>
+  </div>
   <br>
-  <h3>Secrets</h3>
-  <ul id="output">
-  </ul>
-  <br>
-  <h1>Enter your fragments</h1>
-  <br><label for="fragment">Fragment:</label><input type="text" id="fragment"></input>
-  <br><br><button id="addFragment" onclick="App.addFragment();">Add fragment</button>
-  <ul id="fragments">
-  </ul>
-  <button id="calculateSecret" onclick="App.calculateSecret();">Calculate secret</button>
-  <br><br>
+  <div id="calcSecret">
+    <h1>Enter your fragments</h1>
+    <br><label for="fragment">Fragment:</label><input type="text" id="fragment"></input>
+    <br><br>
+    <button id="addFragment" onclick="App.addFragment();">Add fragment</button>
+    <button id="clearFragments" onclick="App.clearFragments();">Clear fragments</button>
+    <h3>Fragments</h3>
+    <ul id="fragments">
+    </ul>
+    <br>
+    <button id="calculateSecret" onclick="App.calculateSecret();">Calculate secret</button>
+  </div>
   <!-- TODO: show prime number p & create hyperlink to wikipedia article -->
   <span class="info">Click <strong>here</strong> to learn more about Shamir's Secret Sharing algorithm.</span>
 </html>
