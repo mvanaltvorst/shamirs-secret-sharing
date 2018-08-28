@@ -22,7 +22,8 @@ const App = {
         var secret = bigInt(document.getElementById("secret").value);
       }
     } catch (_) {
-      alert("Please enter a valid number as secret.");
+      alert("Please enter a valid number as secret. If you're entering hexadecimal, \
+            please remember to prefix your number with `0x`.");
       return;
     }
 
