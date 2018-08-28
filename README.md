@@ -1,7 +1,8 @@
 # Shamir's Secret Sharer
 This is a demo of Shamir's Secret Sharing algorithm. This is an algorithm that
-allows you to convert a secret into `n` shares. You need `k` of these shares
-to reconstruct the secret.
+allows you to convert a secret into different fragments. You only need a selection of these
+fragments to reconstruct the original secret.
+
 
 ## Web GUI
 
