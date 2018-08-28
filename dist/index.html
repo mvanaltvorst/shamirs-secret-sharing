@@ -16,7 +16,7 @@
     <br><label for="secret">Threshold number of fragments:</label><input type="text" id="k" />
     <br><br><button id="splitSecret" onclick="App.splitSecret();">Split secret</button>
     <br>
-    <h3>Secrets</h3>
+    <h3>Fragments</h3>
     <ul id="output">
     </ul>
   </div>
@@ -27,12 +27,14 @@
     <br><br>
     <button id="addFragment" onclick="App.addFragment();">Add fragment</button>
     <button id="clearFragments" onclick="App.clearFragments();">Clear fragments</button>
-    <h3>Fragments</h3>
+    <h3><span class="black" id="amountOfFragments">0</span> fragments</h3>
     <ul id="fragments">
     </ul>
     <br>
-    <button id="calculateSecret" onclick="App.calculateSecret();">Calculate secret</button>
+    <!-- <button id="calculateSecret" onclick="App.calculateSecret();">Calculate secret</button> -->
+    <span class="info" id="calculatedSecretSpan" style="display:none;"><strong>Secret: </strong><span id="calculatedSecret" class="black">5</span></span>
   </div>
   <!-- TODO: show prime number p & create hyperlink to wikipedia article -->
-  <span class="info">Click <strong>here</strong> to learn more about Shamir's Secret Sharing algorithm.</span>
+  <br>
+  <!-- <span class="info">Click <strong>here</strong> to learn more about Shamir's Secret Sharing algorithm.</span> -->
 </html>

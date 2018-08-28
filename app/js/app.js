@@ -2,18 +2,22 @@ import "../css/app.css"
 
 const bigInt = require("big-integer");
 
-//TODO: p should be a prime bigger than 2^64
-const p = bigInt(2).pow(257).minus(1);
+//NOTE: p should be a prime bigger than 2^256 (Ethereum private key max size)
+const PRIME = bigInt(2).pow(257).minus(1);
 // const p = 11;
+
+// console.log(bigInt("0xc99cd1d35a2a28b3dbd7541f529d4a93d5882370").toString());
 
 // console.log(bigInt("c99cd1d35a2a28b3dbd7541f529d4a93d5882370", 16))
 const App = {
   fragments: [],
+  modeInHex: false,
   stringFragments: new Set(), // Used to check whether a fragment was already added
   splitSecret: function() {
     try {
       if (document.getElementById("secret").value.startsWith('0x')) {
         var secret = bigInt(document.getElementById("secret").value.slice(2), 16);
+        this.modeInHex = true; // Output in hex
       } else {
         var secret = bigInt(document.getElementById("secret").value);
       }
@@ -56,7 +60,7 @@ const App = {
         // f(x) = ... + aQ * (x^Q) + ...
         acc = acc.plus(coefficients[j - 1].times(bigInt(i).pow(j)));
       }
-      points.push({ x: i, y: acc.mod(p) });
+      points.push({ x: i, y: acc.mod(PRIME) });
     }
 
     console.log(points);
@@ -67,7 +71,7 @@ const App = {
       ul.removeChild(ul.firstChild);
     }
 
-    // Add points to list
+    // plus points to list
     for (var point of points) {
       var li = document.createElement("li");
       li.appendChild(
@@ -116,7 +120,6 @@ const App = {
 
   updateAmountOfFragments: function() {
     document.getElementById("amountOfFragments").innerHTML = this.fragments.length.toString();
-    // if (this.fragments)
   },
 
   clearFragments: function() {
@@ -131,29 +134,43 @@ const App = {
   },
 
   calculateSecret: function() {
+    // The secret is the y-value at x=0, so we lagrange interpolate for x=0
+    var res = this.lagrangeInterpolate(bigInt(0), this.fragments, PRIME);
+    if (this.modeInHex) { // Input was in hex, so we output in hex too.
+      this.updateSecretSpan(res.toString(16))
+    } else {
+      this.updateSecretSpan(res.toString())
+    }
+  },
+
+  // Will find the y-value for the given x using the lagrange method.
+  // Takes the target x, a list of points and a prime number.
+  lagrangeInterpolate: function(x, points, p) {
     var amountOfFragments = this.fragments.length;
+    var nums = [];
+    var dens = [];
 
-    // Implementation of this formula:
-    // https://wikimedia.org/api/rest_v1/media/math/render/svg/585a96ff9200e5619498e4cbf366a55aea37f360
-    // debugger;
-    var acc = bigInt(0);
-    for (var j = 0; j < amountOfFragments; j++) {
-      var product = this.fragments[j].y;
-      var divider = bigInt(1);
-      for (var m = 0; m < amountOfFragments; m++) {
-        if (m == j) continue;
-        product = product.times(
-          this.fragments[m].x
-        );
-        divider = divider.times(
-          this.fragments[m].x.minus(this.fragments[j].x)
-        );
+    for (var cur = 0; cur < amountOfFragments; cur++) {
+      var numsProduct = bigInt(1);
+      var densProduct = bigInt(1);
+      for (var oth = 0; oth < amountOfFragments; oth++) {
+        if (oth === cur) continue;
+        numsProduct = numsProduct.times(x - this.fragments[oth].x);
+        densProduct = densProduct.times(this.fragments[cur].x - this.fragments[oth].x);
       }
-
-      acc = acc.plus(product.divide(divider));
+      nums.push(numsProduct);
+      dens.push(densProduct);
+    }
+    var den = bigInt(1);
+    for (var densProduct of dens) {
+      den = den.times(densProduct);
+    }
+    var num = bigInt(0);
+    for (var i = 0; i < amountOfFragments; i++) {
+      num = num.plus(nums[i].times(den).times(this.fragments[i].y).divide(dens[i]));
     }
 
-    this.updateSecretSpan(acc.mod(p).toString(16))
+    return num.divide(den).mod(p);
   },
 
   updateSecretSpan: function(secret) {
