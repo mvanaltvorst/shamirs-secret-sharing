@@ -3,16 +3,22 @@ import "../css/app.css"
 const bigInt = require("big-integer");
 
 //TODO: p should be a prime bigger than 2^64
-const p = bigInt(2).pow(127).minus(1);
+const p = bigInt(2).pow(257).minus(1);
+// const p = 11;
 
+// console.log(bigInt("c99cd1d35a2a28b3dbd7541f529d4a93d5882370", 16))
 const App = {
   fragments: [],
   stringFragments: new Set(), // Used to check whether a fragment was already added
   splitSecret: function() {
     try {
-      var secret = bigInt(document.getElementById("secret").value);
+      if (document.getElementById("secret").value.startsWith('0x')) {
+        var secret = bigInt(document.getElementById("secret").value.slice(2), 16);
+      } else {
+        var secret = bigInt(document.getElementById("secret").value);
+      }
     } catch (_) {
-      alert("Please enter an integer as secret.");
+      alert("Please enter a valid number as secret.");
       return;
     }
 
@@ -41,6 +47,7 @@ const App = {
     // a0 = secret, a1 = coefficients[0], a2 = coefficients[1]....
 
     // f(x) = a0 + (a1 * x) + (a2 * x^2) + (a3 * x^3)
+    // debugger;
     var points = [];
     for (var i = 1; i <= n; i++) {
       //TODO: calculate f(x) in another function
@@ -103,6 +110,13 @@ const App = {
     ul.appendChild(li);
     elem.value = "";
 
+    this.updateAmountOfFragments();
+    this.calculateSecret();
+  },
+
+  updateAmountOfFragments: function() {
+    document.getElementById("amountOfFragments").innerHTML = this.fragments.length.toString();
+    // if (this.fragments)
   },
 
   clearFragments: function() {
@@ -112,10 +126,39 @@ const App = {
     }
     this.fragments = [];
     this.stringFragments = new Set();
+    this.updateAmountOfFragments();
+    document.getElementById("calculatedSecretSpan").style.display = "none";
   },
 
   calculateSecret: function() {
+    var amountOfFragments = this.fragments.length;
 
+    // Implementation of this formula:
+    // https://wikimedia.org/api/rest_v1/media/math/render/svg/585a96ff9200e5619498e4cbf366a55aea37f360
+    // debugger;
+    var acc = bigInt(0);
+    for (var j = 0; j < amountOfFragments; j++) {
+      var product = this.fragments[j].y;
+      var divider = bigInt(1);
+      for (var m = 0; m < amountOfFragments; m++) {
+        if (m == j) continue;
+        product = product.times(
+          this.fragments[m].x
+        );
+        divider = divider.times(
+          this.fragments[m].x.minus(this.fragments[j].x)
+        );
+      }
+
+      acc = acc.plus(product.divide(divider));
+    }
+
+    this.updateSecretSpan(acc.mod(p).toString(16))
+  },
+
+  updateSecretSpan: function(secret) {
+    document.getElementById("calculatedSecret").innerHTML = secret;
+    document.getElementById("calculatedSecretSpan").style.display = "block";
   }
 };
 
