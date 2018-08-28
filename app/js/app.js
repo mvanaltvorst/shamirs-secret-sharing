@@ -4,11 +4,7 @@ import AxvecoLogo from "../assets/axveco.jpg"
 const bigInt = require("big-integer");
 //NOTE: p should be a prime bigger than 2^256 (Ethereum private key max size)
 const PRIME = bigInt(2).pow(257).minus(1);
-// const p = 11;
 
-// console.log(bigInt("0xc99cd1d35a2a28b3dbd7541f529d4a93d5882370").toString());
-
-// console.log(bigInt("c99cd1d35a2a28b3dbd7541f529d4a93d5882370", 16))
 const App = {
   fragments: [],
   modeInHex: false,
@@ -52,7 +48,7 @@ const App = {
     // a0 = secret, a1 = coefficients[0], a2 = coefficients[1]....
 
     // f(x) = a0 + (a1 * x) + (a2 * x^2) + (a3 * x^3)
-    // debugger;
+
     var points = [];
     for (var i = 1; i <= n; i++) {
       //TODO: calculate f(x) in another function
