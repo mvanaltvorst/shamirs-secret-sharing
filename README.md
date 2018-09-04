@@ -10,7 +10,8 @@ cd shamirs-secret-sharing
 npm install
 webpack --mode=production
 ```
-The resulting files will be located in the `dist/` directory.
+The resulting files will be located in the `dist/` directory. You can also run `webpack-dev-server` instead of `webpack --mode=production` and visit `localhost:8080` if you only plan to use this on your own machine.
+
 
 ## Web GUI
 
